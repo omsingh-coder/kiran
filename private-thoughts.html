@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Her Private Thoughts</title>
+  <link rel="stylesheet" href="private-thoughts.css" />
+</head>
+<body>
+  <div id="content" style="display: none;">
+    <header>
+      <h1>🔒 Her Private Thoughts</h1>
+      <button id="toggleSlider">✏️ Edit Mode</button>
+    </header>
+
+    <div class="main">
+      <div id="questionsContainer"></div>
+    </div>
+
+    <div id="sliderPanel" class="slider">
+      <h2>📝 Edit Answers</h2>
+      <div id="sliderContent"></div>
+
+      <div class="add-new">
+        <input type="text" id="newQuestion" placeholder="Add new question..." />
+        <button id="addBtn">➕ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="private-thoughts.js"></script>
+  <script>
+    if (sessionStorage.getItem("privateUnlocked") !== "true") {
+      window.location.href = "private-entry.html";
+    } else {
+      document.getElementById("content").style.display = "block";
+    }
+  </script>
+</body>
+</html>

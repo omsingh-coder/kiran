@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Everything Else ✍️</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #fbe9e7, #fff3e0, #f8bbd0);
+      font-family: 'Segoe UI', sans-serif;
+      color: #444;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      font-size: 2rem;
+      padding: 20px;
+      font-weight: bold;
+      color: #e91e63;
+      text-shadow: 1px 1px #fff;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .question-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .question-box textarea {
+      width: 100%;
+      resize: none;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      outline: none;
+      color: #444;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .actions button {
+      background: #e91e63;
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+
+    .actions button:hover {
+      background: #d81b60;
+    }
+
+    #addBtn {
+      margin: 30px 0;
+      background: #8e24aa;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 25px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+      border: none;
+    }
+
+    #addBtn:hover {
+      background: #6a1b9a;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <header>✍️ Everything Else</header>
+
+  <div id="questionsContainer"></div>
+
+  <button id="addBtn">➕ Add New Question</button>
+
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      push,
+      onValue,
+      update,
+      remove
+    } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+      authDomain: "mylaw-c3414.firebaseapp.com",
+      databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+      projectId: "mylaw-c3414",
+      storageBucket: "mylaw-c3414.firebasestorage.app",
+      messagingSenderId: "449744223319",
+      appId: "1:449744223319:web:8eadf59519800edc927712",
+      measurementId: "G-L50E12B128"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const questionsRef = ref(db, 'her-space/everything-else');
+
+    const container = document.getElementById('questionsContainer');
+    const addBtn = document.getElementById('addBtn');
+
+    // Load and display existing questions
+    onValue(questionsRef, snapshot => {
+      container.innerHTML = '';
+      snapshot.forEach(child => {
+        const id = child.key;
+        const data = child.val();
+        createQuestionBox(data.question, data.answer, id);
+      });
+    });
+
+    // Create a new question box
+    function createQuestionBox(questionText = '', answerText = '', id = null) {
+      const box = document.createElement('div');
+      box.className = 'question-box';
+
+      const question = document.createElement('textarea');
+      question.placeholder = 'Your question here...';
+      question.value = questionText;
+
+      const answer = document.createElement('textarea');
+      answer.placeholder = 'Your answer or thoughts...';
+      answer.value = answerText;
+
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = '💾 Save';
+      saveBtn.onclick = () => {
+        const data = {
+          question: question.value.trim(),
+          answer: answer.value.trim()
+        };
+        if (!data.question && !data.answer) return;
+
+        if (id) {
+          update(ref(db, 'her-space/everything-else/' + id), data);
+        } else {
+          push(questionsRef, data);
+        }
+      };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑️ Delete';
+      deleteBtn.onclick = () => {
+        if (id) remove(ref(db, 'her-space/everything-else/' + id));
+        box.remove();
+      };
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+      actions.appendChild(saveBtn);
+      actions.appendChild(deleteBtn);
+
+      box.appendChild(question);
+      box.appendChild(answer);
+      box.appendChild(actions);
+      container.appendChild(box);
+    }
+
+    // Add new empty question
+    addBtn.addEventListener('click', () => {
+      createQuestionBox();
+    });
+  </script>
+</body>
+</html>

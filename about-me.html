@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Me</title>
+  <link rel="stylesheet" href="about-me.css" />
+</head>
+<body>
+  <header>
+    <h1>🧠 About Her</h1>
+  </header>
+
+  <main id="questionsContainer"></main>
+
+  <!-- Floating Circular Button -->
+  <div id="sliderToggle">+</div>
+
+  <!-- Slider Panel -->
+  <div id="sliderPanel">
+    <h2>Edit & Add Questions</h2>
+    <div id="editSection"></div>
+    
+    <div id="addNew">
+      <input type="text" id="newQuestionInput" placeholder="New question..." />
+      <button id="addQuestionBtn">Add</button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="about.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #fbeaff, #d0f4ff);
+  color: #333;
+  padding: 20px;
+  animation: fadeIn 2s ease;
+}
+
+.header {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #5a189a;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.note {
+  background: white;
+  border-left: 6px solid #ff69b4;
+  padding: 15px 20px;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  animation: slideUp 0.5s ease;
+}
+
+.note h3 {
+  margin: 0;
+  color: #8e05c2;
+}
+
+.note p {
+  margin-top: 10px;
+  white-space: pre-wrap;
+}
+
+.note .actions {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.note button {
+  background: none;
+  border: none;
+  font-size: 1.1em;
+  margin-left: 10px;
+  cursor: pointer;
+  color: #888;
+}
+
+.add-btn {
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1em;
+  background: #8e05c2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-container {
+  margin-top: 30px;
+  background: #fff0fc;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.hidden {
+  display: none;
+}
+
+input, textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes slideUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}

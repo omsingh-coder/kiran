@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Her Interests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="interests.css">
+</head>
+<body>
+  <header>
+    <h1>Her Interests ✨</h1>
+    <button id="toggleSidebar">☰</button>
+  </header>
+
+  <main id="interestsDisplay" class="interests-grid"></main>
+
+  <aside id="sidebar">
+    <h2>Edit Interests</h2>
+    <div id="sidebarContent"></div>
+
+    <div class="add-section">
+      <button onclick="addNewQuestion()">➕ Add New</button>
+    </div>
+  </aside>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+      authDomain: "mylaw-c3414.firebaseapp.com",
+      databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+      projectId: "mylaw-c3414",
+      storageBucket: "mylaw-c3414.appspot.com",
+      messagingSenderId: "449744223319",
+      appId: "1:449744223319:web:8eadf59519800edc927712",
+      measurementId: "G-L50E12B128"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const interestsRef = ref(db, 'interests');
+
+    // Sidebar toggle
+    document.getElementById("toggleSidebar").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("open");
+    });
+
+    // Load interests
+    onValue(interestsRef, snapshot => {
+      const data = snapshot.val();
+      const display = document.getElementById("interestsDisplay");
+      const sidebar = document.getElementById("sidebarContent");
+      display.innerHTML = "";
+      sidebar.innerHTML = "";
+
+      for (const id in data) {
+        const { question, answer } = data[id];
+
+        // Main Display
+        display.innerHTML += `
+          <div class="interest-card">
+            <h3>${question || '<em>Untitled Question</em>'}</h3>
+            <p>${answer ? answer : '<em>No answer yet</em>'}</p>
+          </div>
+        `;
+
+        // Sidebar Editor with Save and Delete Button
+        sidebar.innerHTML += `
+          <div class="interest-edit">
+            <input type="text" value="${question}" onchange="editQuestion('${id}', this.value)">
+            <textarea id="answer-${id}" placeholder="Answer...">${answer || ''}</textarea>
+            <div class="edit-buttons">
+              <button onclick="saveAnswer('${id}')">Save</button>
+              <button onclick="deleteAnswer('${id}')">Delete Answer</button>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Add new question and answer input
+    window.addNewQuestion = () => {
+      const newRef = push(interestsRef);
+      set(newRef, { question: "", answer: "" });
+    };
+
+    // Edit question
+    window.editQuestion = (id, newText) => {
+      update(ref(db, `interests/${id}`), { question: newText });
+    };
+
+    // Save answer
+    window.saveAnswer = (id) => {
+      const textarea = document.getElementById(`answer-${id}`);
+      const newAnswer = textarea.value.trim();
+      update(ref(db, `interests/${id}`), { answer: newAnswer });
+    };
+
+    // Delete only answer, keep question
+    window.deleteAnswer = (id) => {
+      if (confirm("Clear the answer?")) {
+        update(ref(db, `interests/${id}`), { answer: "" });
+      }
+    };
+
+    // Load default questions if database is empty
+    onValue(interestsRef, snapshot => {
+      if (!snapshot.exists()) {
+        const defaultQuestions = [
+          "Her hobbies",
+          "Things she wants to try",
+          "What she does when she’s bored",
+          "Shows/movies she binges",
+          "Artists she follows",
+          "What kind of content she enjoys (memes, romance, dark humor)",
+          "Any fandoms she’s in?",
+          "Talents she has",
+          "Music for different moods",
+          "Games she loves",
+          "Skills she wants to learn"
+        ];
+        defaultQuestions.forEach(q => {
+          const newRef = push(interestsRef);
+          set(newRef, { question: q, answer: "" });
+        });
+      }
+    }, { onlyOnce: true });
+  </script>
+</body>
+</html>

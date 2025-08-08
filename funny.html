@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funny Side</title>
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, set, get, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";const firebaseConfig = {
+  apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+  authDomain: "mylaw-c3414.firebaseapp.com",
+  databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+  projectId: "mylaw-c3414",
+  storageBucket: "mylaw-c3414.appspot.com",
+  messagingSenderId: "449744223319",
+  appId: "1:449744223319:web:8eadf59519800edc927712",
+  measurementId: "G-L50E12B128"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
+const storage = getStorage();
+
+const questions = [
+  "Her weirdest habit",
+  "Silly things she enjoys",
+  "Things she laughs at most",
+  "Memes she relates to",
+  "Her go-to jokes",
+  "Embarrassing but funny things she’s done",
+  "Her quirks",
+  "Nicknames she loves/hates"
+];
+
+const container = document.getElementById('questions');
+
+questions.forEach((q, index) => {
+  const qid = `q${index}`;
+  const div = document.createElement('div');
+  div.className = 'question-container';
+  div.innerHTML = `
+    <strong>${q}</strong>
+    <textarea id="${qid}" placeholder="Type your answer..."></textarea>
+    <button onclick="deleteAnswer('${qid}')">Delete Answer</button>
+  `;
+  container.appendChild(div);
+  
+  const answerRef = ref(db, `funnySide/${qid}`);
+  onValue(answerRef, (snapshot) => {
+    const val = snapshot.val();
+    if (val) document.getElementById(qid).value = val;
+  });
+
+  document.getElementById(qid).addEventListener('input', (e) => {
+    set(answerRef, e.target.value);
+  });
+});
+
+window.deleteAnswer = function(id) {
+  const answerRef = ref(db, `funnySide/${id}`);
+  remove(answerRef);
+  document.getElementById(id).value = '';
+}
+
+// Media Upload
+window.uploadMedia = async function () {
+  const input = document.getElementById('mediaInput');
+  const list = document.getElementById('mediaList');
+  if (input.files.length > 0) {
+    const file = input.files[0];
+    const storageRef = sRef(storage, `funnySideMedia/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    const div = document.createElement('div');
+    div.className = 'media-item';
+    if (file.type.startsWith('audio')) {
+      div.innerHTML = `<audio controls src="${url}"></audio>`;
+    } else if (file.type.startsWith('video')) {
+      div.innerHTML = `<video controls width="250" src="${url}"></video>`;
+    }
+    list.appendChild(div);
+  }
+}
+
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff0f5;
+      padding: 20px;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #ff69b4;
+    }
+    .question-container {
+      background: #fff;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 6px solid #ff69b4;
+      border-radius: 8px;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff1493;
+    }
+    .media-upload {
+      background: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      border-left: 6px solid #ff69b4;
+    }
+    .media-list {
+      margin-top: 15px;
+    }
+    .media-item {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>😂 Funny Side of Her</h1>
+  <div id="questions"></div>  <div class="media-upload">
+    <h2>🎙️ Audio/Video Memory Vault</h2>
+    <input type="file" accept="audio/*,video/*" id="mediaInput" />
+    <button onclick="uploadMedia()">Upload</button>
+    <div class="media-list" id="mediaList"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/* Global styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.welcome-page {
+  background: linear-gradient(135deg, #ffe3ec, #f9d0c4);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster-container {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  width: 400px;
+}
+
+.poster-box h1 {
+  font-size: 1.8em;
+  color: #c94f7c;
+  margin-bottom: 10px;
+}
+
+.poster-box p {
+  font-size: 1em;
+  color: #444;
+}
+
+.poster-img {
+  width: 100%;
+  border-radius: 15px;
+  margin: 20px 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.quote {
+  font-style: italic;
+  color: #7b3e57;
+  margin-bottom: 25px;
+}
+
+.enter-btn {
+  background: #c94f7c;
+  color: white;
+  padding: 12px 25px;
+  text-decoration: none;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.enter-btn:hover {
+  background: #a73e68;
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌈 Quick Picks - Preferences</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f8e8ff, #e0f7ff);
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      color: #8e44ad;
+    }
+
+    .question {
+      background: #ffffffcc;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question-title {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .option {
+      flex: 1;
+      background: #eee;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .option:hover {
+      background: #dcd6f7;
+    }
+
+    .option.selected {
+      background: #b28dff;
+      color: white;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌈 Quick Picks</h1>
+
+  <div id="questions-container"></div>
+
+  <footer>Made with ❤️ for her</footer>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+      authDomain: "mylaw-c3414.firebaseapp.com",
+      databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+      projectId: "mylaw-c3414",
+      storageBucket: "mylaw-c3414.firebasestorage.app",
+      messagingSenderId: "449744223319",
+      appId: "1:449744223319:web:8eadf59519800edc927712",
+      measurementId: "G-L50E12B128"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const questions = [
+      { key: "coffeeOrTea", q: "Coffee or tea?", options: ["Coffee", "Tea"] },
+      { key: "rainyOrSunny", q: "Rainy or sunny?", options: ["Rainy", "Sunny"] },
+      { key: "beachOrMountain", q: "Beach or mountain?", options: ["Beach", "Mountain"] },
+      { key: "morningOrNight", q: "Morning person or night owl?", options: ["Morning", "Night Owl"] },
+      { key: "textsOrCalls", q: "Texts or calls?", options: ["Texts", "Calls"] },
+      { key: "readingOrWatching", q: "Reading or watching?", options: ["Reading", "Watching"] },
+      { key: "fastFoodOrHomemade", q: "Fast food or homemade?", options: ["Fast Food", "Homemade"] },
+      { key: "dancingOrSinging", q: "Dancing or singing?", options: ["Dancing", "Singing"] },
+      { key: "catOrDog", q: "Cat or dog person?", options: ["Cat", "Dog"] },
+      { key: "introvertOrExtrovert", q: "Introvert or extrovert?", options: ["Introvert", "Extrovert"] },
+    ];
+
+    const container = document.getElementById("questions-container");
+
+    function renderQuestions(userData = {}) {
+      container.innerHTML = "";
+      questions.forEach(q => {
+        const div = document.createElement("div");
+        div.className = "question";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.innerText = q.q;
+
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "options";
+
+        q.options.forEach(option => {
+          const opt = document.createElement("div");
+          opt.className = "option";
+          opt.innerText = option;
+
+          if (userData[q.key] === option) {
+            opt.classList.add("selected");
+          }
+
+          opt.addEventListener("click", () => {
+            saveAnswer(q.key, option);
+          });
+
+          optionsDiv.appendChild(opt);
+        });
+
+        div.appendChild(title);
+        div.appendChild(optionsDiv);
+        container.appendChild(div);
+      });
+    }
+
+    function saveAnswer(questionKey, answer) {
+      const userRef = ref(db, "preferences/");
+      set(child(userRef, questionKey), answer);
+    }
+
+    function loadAnswers() {
+      const userRef = ref(db, "preferences/");
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        renderQuestions(data);
+      });
+    }
+
+    loadAnswers();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🏡 Her Future Dreams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Georgia', serif;
+      background: url('https://i.imgur.com/YvMCK2d.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      position: relative;
+    }
+
+    .border-frame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: url('https://i.imgur.com/ZlM6K0z.png') no-repeat center center;
+      background-size: cover;
+      z-index: 1;
+      opacity: 0.8;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #ffd5fa;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 6px #000;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section label {
+      display: block;
+      font-size: 1.3rem;
+      color: #ffc6e2;
+      margin-bottom: 10px;
+    }
+
+    .section textarea {
+      width: 100%;
+      min-height: 80px;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      resize: vertical;
+      outline: none;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .section input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      outline: none;
+    }
+
+    #addNewBtn {
+      padding: 12px 20px;
+      background-color: #ffb3ec;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #2c2c2c;
+      margin-bottom: 30px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="border-frame"></div>
+
+  <div class="container">
+    <h1>🏡 Her Future Dreams</h1>
+
+    <div class="section"><label>Dream job</label><textarea id="dreamJob"></textarea></div>
+    <div class="section"><label>Places she wants to travel</label><textarea id="travelPlaces"></textarea></div>
+    <div class="section"><label>Her ideal home</label><textarea id="idealHome"></textarea></div>
+    <div class="section"><label>Number of kids (if any)</label><textarea id="kids"></textarea></div>
+    <div class="section"><label>Bucket list goals</label><textarea id="bucketList"></textarea></div>
+    <div class="section"><label>What she wants to achieve by 30</label><textarea id="by30"></textarea></div>
+    <div class="section"><label>What success means to her</label><textarea id="success"></textarea></div>
+    <div class="section"><label>Where she sees herself in 5 years</label><textarea id="in5Years"></textarea></div>
+    <div class="section"><label>How she wants her wedding to be</label><textarea id="wedding"></textarea></div>
+    <div class="section"><label>Her future couple goals</label><textarea id="coupleGoals"></textarea></div>
+
+    <div class="section">
+      <button id="addNewBtn">➕ Add New Dream</button>
+    </div>
+
+    <div id="customDreamsContainer"></div>
+
+    <footer>🌟 These dreams are sacred. Keep adding as she grows. 🌸</footer>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+      authDomain: "mylaw-c3414.firebaseapp.com",
+      databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+      projectId: "mylaw-c3414",
+      storageBucket: "mylaw-c3414.firebasestorage.app",
+      messagingSenderId: "449744223319",
+      appId: "1:449744223319:web:8eadf59519800edc927712",
+      measurementId: "G-L50E12B128"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const pageRef = ref(db, 'herSpace/futureDreams');
+
+    const fields = [
+      "dreamJob", "travelPlaces", "idealHome", "kids", "bucketList",
+      "by30", "success", "in5Years", "wedding", "coupleGoals"
+    ];
+
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener("input", () => {
+        set(ref(db, `herSpace/futureDreams/${id}`), el.value);
+      });
+    });
+
+    onValue(pageRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        fields.forEach(id => {
+          const el = document.getElementById(id);
+          if (data[id]) el.value = data[id];
+        });
+      }
+    });
+
+    // Custom Dreams Logic
+    const customContainer = document.getElementById("customDreamsContainer");
+    const addNewBtn = document.getElementById("addNewBtn");
+
+    onValue(ref(db, 'herSpace/futureDreams/customEntries'), (snapshot) => {
+      const data = snapshot.val();
+      customContainer.innerHTML = "";
+      if (data) {
+        Object.entries(data).forEach(([key, entry]) => {
+          createCustomEntry(key, entry.label, entry.text);
+        });
+      }
+    });
+
+    function createCustomEntry(entryId, labelText = "", contentText = "") {
+      const wrapper = document.createElement("div");
+      wrapper.className = "section";
+      wrapper.id = `entry-${entryId}`;
+
+      const label = document.createElement("input");
+      label.type = "text";
+      label.value = labelText;
+      label.placeholder = "Dream title...";
+
+      const textarea = document.createElement("textarea");
+      textarea.value = contentText;
+      textarea.placeholder = "Describe this dream...";
+
+      // Save on input
+      function save() {
+        set(ref(db, `herSpace/futureDreams/customEntries/${entryId}`), {
+          label: label.value,
+          text: textarea.value
+        });
+      }
+
+      label.addEventListener("input", save);
+      textarea.addEventListener("input", save);
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(textarea);
+      customContainer.appendChild(wrapper);
+    }
+
+    addNewBtn.addEventListener("click", () => {
+      const newId = `entry-${Date.now()}`;
+      createCustomEntry(newId, "", "");
+      set(ref(db, `herSpace/futureDreams/customEntries/${newId}`), {
+        label: "",
+        text: ""
+      });
+    });
+  </script>
+
+</body>
+</html>

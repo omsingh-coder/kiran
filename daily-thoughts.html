@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Thoughts</title>
+  <link rel="stylesheet" href="daily-thoughts.css">
+  <script type="module" src="daily-thoughts.js" defer></script>
+</head>
+<body>
+  <div class="background-blur"></div>
+  <h1 class="page-title">🌤️ Her Daily Thoughts</h1>
+
+  <div class="thoughts-container">
+
+    <!-- Mood Section -->
+    <div class="thought-card">
+      <h2>Current Mood</h2>
+      <div class="emoji-picker">
+        <input type="text" id="moodInput" placeholder="😄 or describe your mood..." />
+      </div>
+    </div>
+
+    <!-- Highlight -->
+    <div class="thought-card">
+      <h2>Today’s Highlight</h2>
+      <textarea id="highlightInput" placeholder="What made her smile today?"></textarea>
+    </div>
+
+    <!-- Let Go -->
+    <div class="thought-card">
+      <h2>Letting Go</h2>
+      <textarea id="letgoInput" placeholder="What can she release today?"></textarea>
+    </div>
+
+    <!-- Today’s Thought -->
+    <div class="thought-card">
+      <h2>Today’s Thought</h2>
+      <textarea id="thoughtInput" placeholder="A passing or powerful thought..."></textarea>
+    </div>
+
+    <!-- Appreciation -->
+    <div class="thought-card">
+      <h2>Gratitude</h2>
+      <textarea id="appreciateInput" placeholder="Something she truly appreciated..."></textarea>
+    </div>
+
+    <!-- Affirmation -->
+    <div class="thought-card">
+      <h2>Daily Affirmation</h2>
+      <div class="affirmation-row">
+        <textarea id="affirmationInput" placeholder="You are enough. 💛"></textarea>
+        <button id="refreshAffirmation">🔄</button>
+      </div>
+    </div>
+
+    <button class="save-btn">💾 Save Today</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT70w5hwEZqELdgoFYGyAuGqP9AQsAqu4",
+      authDomain: "mylaw-c3414.firebaseapp.com",
+      databaseURL: "https://mylaw-c3414-default-rtdb.firebaseio.com",
+      projectId: "mylaw-c3414",
+      storageBucket: "mylaw-c3414.appspot.com",
+      messagingSenderId: "449744223319",
+      appId: "1:449744223319:web:8eadf59519800edc927712",
+      measurementId: "G-L50E12B128"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const saveBtn = document.querySelector('.save-btn');
+    saveBtn.addEventListener('click', () => {
+      const data = {
+        mood: document.getElementById('moodInput').value,
+        highlight: document.getElementById('highlightInput').value,
+        letgo: document.getElementById('letgoInput').value,
+        thought: document.getElementById('thoughtInput').value,
+        appreciate: document.getElementById('appreciateInput').value,
+        affirmation: document.getElementById('affirmationInput').value
+      };
+      set(ref(db, 'dailyThoughts'), data)
+        .then(() => alert("💾 Saved!"))
+        .catch(err => alert("Error saving: " + err));
+    });
+
+    // Load existing data
+    window.addEventListener('load', () => {
+      get(ref(db, 'dailyThoughts')).then(snapshot => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          document.getElementById('moodInput').value = data.mood || '';
+          document.getElementById('highlightInput').value = data.highlight || '';
+          document.getElementById('letgoInput').value = data.letgo || '';
+          document.getElementById('thoughtInput').value = data.thought || '';
+          document.getElementById('appreciateInput').value = data.appreciate || '';
+          document.getElementById('affirmationInput').value = data.affirmation || '';
+        }
+      });
+    });
+
+    // Affirmation suggestions
+    const affirmations = [
+      "You are enough 🌼",
+      "You radiate positive energy 🌈",
+      "You deserve peace 🌊",
+      "You are deeply loved 💖",
+      "You can do hard things 💪"
+    ];
+
+    document.getElementById('refreshAffirmation').addEventListener('click', () => {
+      const random = affirmations[Math.floor(Math.random() * affirmations.length)];
+      document.getElementById('affirmationInput').value = random;
+    });
+  </script>
+</body>
+</html>

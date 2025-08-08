@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Relationship Notes</title>
+  <link rel="stylesheet" href="relationship-notes.css">
+  <script type="module" src="notes.js" defer></script>
+</head>
+<body>
+  <div class="header">
+    💬 Her Relationship Notes
+  </div>
+
+  <div id="notesContainer" class="notes-container"></div>
+
+  <button class="add-btn" onclick="toggleAddForm()">➕ Add New</button>
+
+  <!-- Add/Edit Form -->
+  <div id="formContainer" class="form-container hidden">
+    <input type="text" id="questionInput" placeholder="Question">
+    <textarea id="answerInput" placeholder="Your Answer..."></textarea>
+    <button onclick="saveNote()">💾 Save</button>
+    <button onclick="cancelEdit()">❌ Cancel</button>
+  </div>
+</body>
+</html>

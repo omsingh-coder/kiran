@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Beautiful World</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #d63384;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .nav-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(214, 51, 132, 0.2);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: #d63384;
+      font-weight: bold;
+    }
+
+    .nav-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 12px rgba(214, 51, 132, 0.3);
+      background-color: #fff7fb;
+    }
+
+    .heart {
+      font-size: 1.2em;
+      margin-right: 6px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.85em;
+      color: #a9a9a9;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 My Emotional Garden 🌸</h1>
+
+  <div class="nav-grid">
+    <a href="likes-dislikes.html" class="nav-card"><span class="heart">❤️</span>Likes & Dislikes</a>
+    <a href="interests.html" class="nav-card"><span class="heart">🌟</span>Interests</a>
+    <a href="about-me.html" class="nav-card"><span class="heart">📖</span>About Me</a>
+    <a href="relationship-notes.html" class="nav-card"><span class="heart">💌</span>Relationship Notes</a>
+    <a href="private-entry.html" class="nav-card"><span class="heart">🔐</span>Private Thoughts</a>
+    <a href="preferences.html" class="nav-card"><span class="heart">🎀</span>Preferences</a>
+    <a href="future-dreams.html" class="nav-card"><span class="heart">🌈</span>Future Dreams</a>
+    <a href="memories.html" class="nav-card"><span class="heart">📸</span>Memories</a>
+    <a href="daily-thoughts.html" class="nav-card"><span class="heart">📝</span>Daily Thoughts</a>
+    <a href="fears-anxieties.html" class="nav-card"><span class="heart">💭</span>Fears & Anxieties</a>
+    <a href="funny.html" class="nav-card"><span class="heart">😂</span>Funny Side</a>
+    <a href="everything-else.html" class="nav-card"><span class="heart">✨</span>Everything Else</a>
+  </div>
+
+  <footer>
+    Made with endless love 💖 just for you
+  </footer>
+</body>
+</html>
